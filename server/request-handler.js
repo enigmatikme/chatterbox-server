@@ -40,16 +40,13 @@ var requestHandler = function (request, response) {
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
   var headers = defaultCorsHeaders;
-  let method = request.method;
-  let url = request.url;
-
   if (request.method === 'POST' && request.url === '/classes/messages') {
+    var statusCode = 201;
     let body = [];
     headers['Content-Type'] = 'application/json';
     request.on('data', (chunk) => {
       body.push(chunk);
       headers['access-control-allow-methods'] = 'POST';
-      var statusCode = 201;
       response.writeHead(statusCode, headers);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
@@ -57,8 +54,7 @@ var requestHandler = function (request, response) {
       response.end(body);
     });
 
-  } else if (request.method === 'GET' && request.url === '/classes/messages') {
-    let body = messages;
+  } else if (request.method === 'GET' && request.url.includes('/classes/messages')) {
     let statusCode = 200;
     headers['access-control-allow-methods'] = 'GET';
     response.writeHead(statusCode, headers);
@@ -98,8 +94,4 @@ var requestHandler = function (request, response) {
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
 
-
-
-
-var exports = module.exports = {};
-exports.requestHandler = requestHandler;
+module.exports.requestHandler = requestHandler;

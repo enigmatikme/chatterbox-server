@@ -58,9 +58,7 @@ form input[type=text] {
     font-size: 12px;
     padding: 5px;
 }
-.textbox{
-    width: 450px;
-}
+
 .chat {
     padding: 5px;
     margin-bottom: 5px;
@@ -90,6 +88,3 @@ form input[type=text] {
     background-color: #0090da;
 }
 
-.hidden {
-    display: none;
-}
