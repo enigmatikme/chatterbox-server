@@ -14,7 +14,7 @@ this file and include it in basic-server.js so that it actually works.
 // console.log("yooo");
 let messages = {};
 messages.results = [];
-var requestHandler = function(request, response) {
+var requestHandler = function (request, response) {
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -37,9 +37,8 @@ var requestHandler = function(request, response) {
   if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
     headers['Content-Type'] = 'application/json';
-      // let statusCode = 200;
     request.on('error', (err) => {
-       let statusCode = 404;
+      let statusCode = 404;
       console.error(err);
     }).on('data', (chunk) => {
       body.push(chunk);
@@ -47,35 +46,24 @@ var requestHandler = function(request, response) {
       response.writeHead(statusCode, headers);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
-      messages.results.push(body);
-      console.log(response);
+      messages.results.push(JSON.parse(body));
       response.end(body);
     });
 
   } else if (request.method === 'GET' && request.url === '/classes/messages') {
     let body = messages;
     let statusCode = 200;
-    // let responseBody = { headers, method, url, body };
-    // response.end(JSON.stringify(responseBody));
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(messages));
-  //request
-
+    
   } else {
     var statusCode = 404;
-    let body = [];
-    headers['Content-Type'] = 'application/json';
-    response.writeHead(statusCode, headers);
-    body = Buffer.concat(body).toString();
-    response.end(body);
+    response.writeHead(statusCode);
+    response.end();
   }
   // The outgoing status.
 
   // See the note below about CORS headers.
-
-  // if (typeof request === "object") {
-  //   messages.push(request);
-  // }
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
