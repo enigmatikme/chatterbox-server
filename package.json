@@ -31,6 +31,6 @@
     ]
   },
   "dependencies": {
-    "underscore": "^1.9.1"
+    "underscore": "file:node_modules/underscore"
   }
 }

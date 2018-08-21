@@ -12,8 +12,17 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 // console.log("yooo");
-let messages = {};
-messages.results = [];
+let messages = {
+  results: []
+};
+
+var defaultCorsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-headers': 'content-type, accept',
+  'access-control-max-age': 10 // Seconds.
+};
+
 var requestHandler = function (request, response) {
   // Request and Response come from node's http module.
   //
@@ -37,11 +46,9 @@ var requestHandler = function (request, response) {
   if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
     headers['Content-Type'] = 'application/json';
-    request.on('error', (err) => {
-      let statusCode = 404;
-      console.error(err);
-    }).on('data', (chunk) => {
+    request.on('data', (chunk) => {
       body.push(chunk);
+      headers['access-control-allow-methods'] = 'POST';
       var statusCode = 201;
       response.writeHead(statusCode, headers);
     }).on('end', () => {
@@ -53,9 +60,10 @@ var requestHandler = function (request, response) {
   } else if (request.method === 'GET' && request.url === '/classes/messages') {
     let body = messages;
     let statusCode = 200;
+    headers['access-control-allow-methods'] = 'GET';
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(messages));
-    
+
   } else {
     var statusCode = 404;
     response.writeHead(statusCode);
@@ -89,11 +97,9 @@ var requestHandler = function (request, response) {
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10 // Seconds.
-};
+
+
+
+
 var exports = module.exports = {};
 exports.requestHandler = requestHandler;
